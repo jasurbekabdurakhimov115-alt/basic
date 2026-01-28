@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduNest - Circle Letters Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #FF3B3B;
+            --dark-red: #D62828;
+            --light-red: #FF6B6B;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --success: #48bb78;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 59, 59, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border: 4px solid var(--primary-red);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 rgba(255, 59, 59, 0.2);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        .name-input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            border: 3px solid var(--primary-red);
+            border-radius: 15px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: var(--dark-red);
+            box-shadow: 0 0 0 4px rgba(255, 59, 59, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .start-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(255, 59, 59, 0.3);
+        }
+
+        .start-btn:hover {
+            background: var(--dark-red);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 59, 59, 0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Exercise Screen */
+        .exercise-screen {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border: 4px solid var(--primary-red);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .exercise-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid var(--primary-red);
+        }
+
+        .exercise-logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .student-greeting {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            border-left: 5px solid var(--primary-red);
+            padding: 20px 25px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+        }
+
+        .instructions p {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Letters Table */
+        .letters-table-wrapper {
+            margin-bottom: 35px;
+            overflow-x: auto;
+        }
+
+        .letters-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border: 4px solid var(--primary-red);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .letters-table td {
+            padding: 25px;
+            text-align: center;
+            border: 3px solid var(--primary-red);
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Fredoka', sans-serif;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+            position: relative;
+        }
+
+        .letters-table td:hover {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            transform: scale(1.05);
+        }
+
+        .letters-table td.selected {
+            background: var(--primary-red);
+            color: white;
+            position: relative;
+        }
+
+        .letters-table td.selected::before {
+            content: '●';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.3);
+            z-index: 0;
+        }
+
+        .letters-table td.selected .letter-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 6px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-clear {
+            background: #f6ad55;
+            color: white;
+            box-shadow: 0 6px 15px rgba(246, 173, 85, 0.3);
+        }
+
+        .btn-clear:hover {
+            background: #ed8936;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(246, 173, 85, 0.4);
+        }
+
+        .btn-copy {
+            background: #3182ce;
+            color: white;
+            box-shadow: 0 6px 15px rgba(49, 130, 206, 0.3);
+        }
+
+        .btn-copy:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(49, 130, 206, 0.4);
+        }
+
+        /* Answer Sheet */
+        .answer-sheet {
+            display: none;
+            background: white;
+            border: 3px solid var(--primary-red);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .answer-sheet.visible {
+            display: block;
+        }
+
+        .answer-sheet-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .selected-letters {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            text-align: center;
+            font-family: 'Fredoka', sans-serif;
+            letter-spacing: 8px;
+            line-height: 2;
+            margin-bottom: 20px;
+        }
+
+        .copy-section {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .copy-message {
+            margin-top: 10px;
+            color: var(--success);
+            font-weight: 600;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .welcome-screen {
+                padding: 40px 25px;
+            }
+
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .exercise-screen {
+                padding: 25px 20px;
+            }
+
+            .exercise-logo {
+                font-size: 2rem;
+            }
+
+            .exercise-title {
+                font-size: 1.4rem;
+            }
+
+            .letters-table td {
+                padding: 15px;
+                font-size: 1.8rem;
+            }
+
+            .letters-table td.selected::before {
+                font-size: 3.5rem;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+
+            .selected-letters {
+                font-size: 1.3rem;
+                letter-spacing: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <div class="logo">🎓 EduNest</div>
+            <div class="tagline">Your Learning Adventure Begins Here</div>
+            <h1 class="welcome-title">Welcome, Student! 👋</h1>
+            <p class="welcome-subtitle">Let's start your Circle Letters Exercise</p>
+            <div class="name-input-wrapper">
+                <input 
+                    type="text" 
+                    class="name-input" 
+                    id="studentName" 
+                    placeholder="Enter your name..."
+                    autocomplete="off"
+                >
+            </div>
+            <button class="start-btn" id="startBtn" disabled>Start Exercise</button>
+        </div>
+
+        <!-- Exercise Screen -->
+        <div class="exercise-screen" id="exerciseScreen">
+            <div class="exercise-header">
+                <div class="exercise-logo">🎓 EduNest</div>
+                <div class="student-greeting" id="studentGreeting"></div>
+            </div>
+
+            <h2 class="exercise-title">C. Circle the letters you hear.</h2>
+
+            <div class="instructions">
+                <p><strong>📝 Instructions:</strong></p>
+                <p>• Listen carefully to the recording</p>
+                <p>• Click on each letter you hear to circle it</p>
+                <p>• Click again to unselect if needed</p>
+                <p>• Selected letters will turn red</p>
+            </div>
+
+            <div class="letters-table-wrapper">
+                <table class="letters-table" id="lettersTable">
+                    <tr>
+                        <td data-letter="B"><span class="letter-text">B</span></td>
+                        <td data-letter="P"><span class="letter-text">P</span></td>
+                        <td data-letter="E"><span class="letter-text">E</span></td>
+                        <td data-letter="D"><span class="letter-text">D</span></td>
+                        <td data-letter="G"><span class="letter-text">G</span></td>
+                    </tr>
+                    <tr>
+                        <td data-letter="K"><span class="letter-text">K</span></td>
+                        <td data-letter="F"><span class="letter-text">F</span></td>
+                        <td data-letter="M"><span class="letter-text">M</span></td>
+                        <td data-letter="X"><span class="letter-text">X</span></td>
+                        <td data-letter="I"><span class="letter-text">I</span></td>
+                    </tr>
+                    <tr>
+                        <td data-letter="A"><span class="letter-text">A</span></td>
+                        <td data-letter="H"><span class="letter-text">H</span></td>
+                        <td data-letter="N"><span class="letter-text">N</span></td>
+                        <td data-letter="Z"><span class="letter-text">Z</span></td>
+                        <td data-letter="V"><span class="letter-text">V</span></td>
+                    </tr>
+                    <tr>
+                        <td data-letter="C"><span class="letter-text">C</span></td>
+                        <td data-letter="J"><span class="letter-text">J</span></td>
+                        <td data-letter="L"><span class="letter-text">L</span></td>
+                        <td data-letter="O"><span class="letter-text">O</span></td>
+                        <td data-letter="W"><span class="letter-text">W</span></td>
+                    </tr>
+                    <tr>
+                        <td data-letter="R"><span class="letter-text">R</span></td>
+                        <td data-letter="T"><span class="letter-text">T</span></td>
+                        <td data-letter="U"><span class="letter-text">U</span></td>
+                        <td data-letter="Y"><span class="letter-text">Y</span></td>
+                        <td data-letter="S"><span class="letter-text">S</span></td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-submit" id="submitBtn">✓ Submit Answers</button>
+                <button class="btn btn-clear" id="clearBtn">↺ Clear All</button>
+            </div>
+
+            <!-- Answer Sheet Section -->
+            <div class="answer-sheet" id="answerSheet">
+                <h3 class="answer-sheet-title" id="answerSheetTitle">📋 Student Name</h3>
+                <div class="selected-letters" id="selectedLetters">No letters selected</div>
+                <div class="copy-section">
+                    <button class="btn btn-copy" id="copyBtn">📋 Copy Answers</button>
+                    <p class="copy-message" id="copyMessage">✓ Answers copied to clipboard!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const exerciseScreen = document.getElementById('exerciseScreen');
+        const studentNameInput = document.getElementById('studentName');
+        const startBtn = document.getElementById('startBtn');
+        const studentGreeting = document.getElementById('studentGreeting');
+        const lettersTable = document.getElementById('lettersTable');
+        const submitBtn = document.getElementById('submitBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const answerSheet = document.getElementById('answerSheet');
+        const answerSheetTitle = document.getElementById('answerSheetTitle');
+        const selectedLettersDiv = document.getElementById('selectedLetters');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyMessage = document.getElementById('copyMessage');
+
+        let studentName = '';
+        let selectedLetters = new Set();
+
+        // Enable start button when name is entered
+        studentNameInput.addEventListener('input', (e) => {
+            startBtn.disabled = e.target.value.trim().length === 0;
+        });
+
+        // Start button - move to exercise and enter fullscreen
+        startBtn.addEventListener('click', () => {
+            studentName = studentNameInput.value.trim();
+            if (studentName) {
+                welcomeScreen.classList.add('hidden');
+                exerciseScreen.style.display = 'block';
+                studentGreeting.textContent = `Hello, ${studentName}! 🌟`;
+                
+                // Auto-enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('Fullscreen error:', err.message);
+                    });
+                }
+            }
+        });
+
+        // Make letters selectable
+        lettersTable.addEventListener('click', (e) => {
+            const cell = e.target.closest('td');
+            if (!cell) return;
+
+            const letter = cell.dataset.letter;
+            
+            if (cell.classList.contains('selected')) {
+                cell.classList.remove('selected');
+                selectedLetters.delete(letter);
+            } else {
+                cell.classList.add('selected');
+                selectedLetters.add(letter);
+            }
+        });
+
+        // Clear all selections
+        clearBtn.addEventListener('click', () => {
+            const allCells = lettersTable.querySelectorAll('td');
+            allCells.forEach(cell => cell.classList.remove('selected'));
+            selectedLetters.clear();
+            answerSheet.classList.remove('visible');
+        });
+
+        // Submit answers
+        submitBtn.addEventListener('click', () => {
+            if (selectedLetters.size === 0) {
+                alert('Please select at least one letter before submitting!');
+                return;
+            }
+
+            displayAnswerSheet();
+        });
+
+        // Display answer sheet
+        function displayAnswerSheet() {
+            answerSheetTitle.textContent = `📋 ${studentName}`;
+            
+            if (selectedLetters.size > 0) {
+                const lettersArray = Array.from(selectedLetters).sort();
+                selectedLettersDiv.textContent = lettersArray.join('  ');
+            } else {
+                selectedLettersDiv.textContent = 'No letters selected';
+            }
+
+            answerSheet.classList.add('visible');
+            answerSheet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Copy answers to clipboard
+        copyBtn.addEventListener('click', () => {
+            const lettersArray = Array.from(selectedLetters).sort();
+            const answersText = `${studentName}\n\nCircled Letters: ${lettersArray.join(', ')}`;
+
+            navigator.clipboard.writeText(answersText).then(() => {
+                copyMessage.style.display = 'block';
+                setTimeout(() => {
+                    copyMessage.style.display = 'none';
+                }, 3000);
+            }).catch(err => {
+                alert('Failed to copy answers. Please try again.');
+            });
+        });
+
+        // Allow Enter key to submit on welcome screen
+        studentNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !startBtn.disabled) {
+                startBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
