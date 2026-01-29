@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduNest - Complete Information Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #FF3B3B;
+            --dark-red: #D62828;
+            --light-red: #FF6B6B;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --success: #48bb78;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 59, 59, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(102, 126, 234, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border: 4px solid var(--primary-red);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 3px 3px 0 rgba(255, 59, 59, 0.2);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+
+        .name-input-wrapper {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .name-input {
+            width: 100%;
+            padding: 20px 25px;
+            font-size: 1.2rem;
+            border: 3px solid var(--primary-red);
+            border-radius: 15px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .name-input:focus {
+            border-color: var(--dark-red);
+            box-shadow: 0 0 0 4px rgba(255, 59, 59, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .start-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(255, 59, 59, 0.3);
+        }
+
+        .start-btn:hover {
+            background: var(--dark-red);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 59, 59, 0.4);
+        }
+
+        .start-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Exercise Screen */
+        .exercise-screen {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            border: 4px solid var(--primary-red);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .exercise-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 3px solid var(--primary-red);
+        }
+
+        .exercise-logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .student-greeting {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+            border-left: 5px solid var(--primary-red);
+            padding: 20px 25px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+        }
+
+        .instructions p {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Person Cards */
+        .persons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 35px;
+        }
+
+        .person-card {
+            background: white;
+            border: 3px solid var(--primary-red);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .person-number {
+            display: inline-block;
+            background: var(--primary-red);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Fredoka', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .question-group {
+            margin-bottom: 20px;
+        }
+
+        .question-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .info-input {
+            width: 100%;
+            padding: 12px 15px;
+            font-size: 1.05rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            background: #f7fafc;
+        }
+
+        .info-input:focus {
+            border-color: var(--primary-red);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 59, 59, 0.1);
+        }
+
+        .info-input.filled {
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border-color: var(--success);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 6px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-copy {
+            background: #3182ce;
+            color: white;
+            box-shadow: 0 6px 15px rgba(49, 130, 206, 0.3);
+        }
+
+        .btn-copy:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(49, 130, 206, 0.4);
+        }
+
+        /* Answer Sheet */
+        .answer-sheet {
+            display: none;
+            background: white;
+            border: 3px solid var(--primary-red);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .answer-sheet.visible {
+            display: block;
+        }
+
+        .answer-sheet-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .answer-person {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .answer-person-number {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-red);
+            margin-bottom: 12px;
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .answer-line {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .answer-line strong {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .copy-section {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .copy-message {
+            margin-top: 10px;
+            color: var(--success);
+            font-weight: 600;
+            display: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .welcome-screen {
+                padding: 40px 25px;
+            }
+
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .exercise-screen {
+                padding: 25px 20px;
+            }
+
+            .exercise-logo {
+                font-size: 2rem;
+            }
+
+            .exercise-title {
+                font-size: 1.4rem;
+            }
+
+            .persons-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .person-card {
+                padding: 20px;
+            }
+
+            .info-input {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <div class="logo">🎓 EduNest</div>
+            <div class="tagline">Your Learning Adventure Begins Here</div>
+            <h1 class="welcome-title">Welcome, Student! 👋</h1>
+            <p class="welcome-subtitle">Let's start your Complete Information Exercise</p>
+            <div class="name-input-wrapper">
+                <input 
+                    type="text" 
+                    class="name-input" 
+                    id="studentName" 
+                    placeholder="Enter your name..."
+                    autocomplete="off"
+                >
+            </div>
+            <button class="start-btn" id="startBtn" disabled>Start Exercise</button>
+        </div>
+
+        <!-- Exercise Screen -->
+        <div class="exercise-screen" id="exerciseScreen">
+            <div class="exercise-header">
+                <div class="exercise-logo">🎓 EduNest</div>
+                <div class="student-greeting" id="studentGreeting"></div>
+            </div>
+
+            <h2 class="exercise-title">Exercise 4. (07. MP3) Listen to the recording and complete the information.</h2>
+
+            <div class="instructions">
+                <p><strong>📝 Instructions:</strong></p>
+                <p>• Listen carefully to the recording</p>
+                <p>• Fill in the information for each person</p>
+                <p>• All text is automatically uppercase</p>
+                <p>• You can leave answers blank if needed</p>
+            </div>
+
+            <div class="persons-grid" id="personsGrid">
+                <!-- Person cards will be generated here -->
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-submit" id="submitBtn">✓ Submit Answers</button>
+            </div>
+
+            <!-- Answer Sheet Section -->
+            <div class="answer-sheet" id="answerSheet">
+                <h3 class="answer-sheet-title" id="answerSheetTitle">📋 Student Name</h3>
+                <div id="answerContent">
+                    <!-- Answers will be displayed here -->
+                </div>
+                <div class="copy-section">
+                    <button class="btn btn-copy" id="copyBtn">📋 Copy Answers</button>
+                    <p class="copy-message" id="copyMessage">✓ Answers copied to clipboard!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Person data structure with questions
+        const personsData = [
+            {
+                number: 1,
+                questions: [
+                    { id: 'p1_name', label: 'Name' },
+                    { id: 'p1_do', label: 'What does she do?' },
+                    { id: 'p1_from', label: 'Where is she from?' },
+                    { id: 'p1_sports', label: 'What sports does she like?' },
+                    { id: 'p1_often', label: 'How often?' }
+                ]
+            },
+            {
+                number: 2,
+                questions: [
+                    { id: 'p2_name', label: 'Name' },
+                    { id: 'p2_do', label: 'What does he do?' },
+                    { id: 'p2_from', label: 'Where is he from?' },
+                    { id: 'p2_like', label: 'What does he like?' },
+                    { id: 'p2_work', label: 'Where does he work?' },
+                    { id: 'p2_weekends', label: 'Where does he go at weekends?' }
+                ]
+            },
+            {
+                number: 3,
+                questions: [
+                    { id: 'p3_name', label: 'Name' },
+                    { id: 'p3_do', label: 'What does he do?' },
+                    { id: 'p3_work', label: 'How often does he work?' },
+                    { id: 'p3_plan', label: 'Where does he plan to go?' },
+                    { id: 'p3_when', label: 'When does he plan to go?' }
+                ]
+            },
+            {
+                number: 4,
+                questions: [
+                    { id: 'p4_name', label: 'Name' },
+                    { id: 'p4_do', label: 'What does she do?' },
+                    { id: 'p4_work', label: 'Where does she work?' },
+                    { id: 'p4_plan', label: 'Where does she plan to go?' },
+                    { id: 'p4_sundays', label: 'How long does she work on Sundays?' }
+                ]
+            },
+            {
+                number: 5,
+                questions: [
+                    { id: 'p5_name', label: 'Name' },
+                    { id: 'p5_do', label: 'What does she do?' },
+                    { id: 'p5_from', label: 'Where is she from?' }
+                ]
+            },
+            {
+                number: 6,
+                questions: [
+                    { id: 'p6_name', label: 'Name' },
+                    { id: 'p6_after', label: 'What does she like to do after work?' },
+                    { id: 'p6_do', label: 'What does he do?' },
+                    { id: 'p6_from', label: 'Where is he from?' },
+                    { id: 'p6_like', label: 'What does he like?' },
+                    { id: 'p6_children', label: 'How many children does he have?' }
+                ]
+            },
+            {
+                number: 7,
+                questions: [
+                    { id: 'p7_name', label: 'Name' },
+                    { id: 'p7_do', label: 'What does she do?' },
+                    { id: 'p7_from', label: 'Where is she from?' },
+                    { id: 'p7_work', label: 'Where does she work?' },
+                    { id: 'p7_like', label: 'What does she like?' },
+                    { id: 'p7_favourite', label: "What's her favourite one?" }
+                ]
+            },
+            {
+                number: 8,
+                questions: [
+                    { id: 'p8_name', label: 'Name' },
+                    { id: 'p8_from', label: 'Where is he from?' },
+                    { id: 'p8_do', label: 'What does he do?' },
+                    { id: 'p8_work', label: 'Where does he work?' },
+                    { id: 'p8_like', label: 'What does he like?' },
+                    { id: 'p8_sport', label: 'What kind of sport does he like?' },
+                    { id: 'p8_often', label: 'How often?' }
+                ]
+            }
+        ];
+
+        // Elements
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const exerciseScreen = document.getElementById('exerciseScreen');
+        const studentNameInput = document.getElementById('studentName');
+        const startBtn = document.getElementById('startBtn');
+        const studentGreeting = document.getElementById('studentGreeting');
+        const personsGrid = document.getElementById('personsGrid');
+        const submitBtn = document.getElementById('submitBtn');
+        const answerSheet = document.getElementById('answerSheet');
+        const answerSheetTitle = document.getElementById('answerSheetTitle');
+        const answerContent = document.getElementById('answerContent');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyMessage = document.getElementById('copyMessage');
+
+        let studentName = '';
+
+        // Enable start button when name is entered
+        studentNameInput.addEventListener('input', (e) => {
+            startBtn.disabled = e.target.value.trim().length === 0;
+        });
+
+        // Start button - move to exercise and enter fullscreen
+        startBtn.addEventListener('click', () => {
+            studentName = studentNameInput.value.trim();
+            if (studentName) {
+                welcomeScreen.classList.add('hidden');
+                exerciseScreen.style.display = 'block';
+                studentGreeting.textContent = `Hello, ${studentName}! 🌟`;
+                generatePersonCards();
+                
+                // Auto-enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('Fullscreen error:', err.message);
+                    });
+                }
+            }
+        });
+
+        // Generate person cards
+        function generatePersonCards() {
+            personsGrid.innerHTML = '';
+            
+            personsData.forEach(person => {
+                const card = document.createElement('div');
+                card.className = 'person-card';
+                
+                let questionsHTML = '';
+                person.questions.forEach(q => {
+                    questionsHTML += `
+                        <div class="question-group">
+                            <label class="question-label">${q.label}</label>
+                            <input type="text" class="info-input" id="${q.id}" autocomplete="off">
+                        </div>
+                    `;
+                });
+                
+                card.innerHTML = `
+                    <div class="person-number">Person ${person.number}</div>
+                    ${questionsHTML}
+                `;
+                
+                personsGrid.appendChild(card);
+            });
+
+            setupInputs();
+        }
+
+        // Setup inputs with automatic uppercase
+        function setupInputs() {
+            const allInputs = document.querySelectorAll('.info-input');
+            allInputs.forEach((input) => {
+                input.addEventListener('input', (e) => {
+                    const value = e.target.value.toUpperCase();
+                    e.target.value = value;
+
+                    if (value.trim().length > 0) {
+                        e.target.classList.add('filled');
+                    } else {
+                        e.target.classList.remove('filled');
+                    }
+                });
+            });
+
+            if (allInputs.length > 0) {
+                allInputs[0].focus();
+            }
+        }
+
+        // Submit answers
+        submitBtn.addEventListener('click', () => {
+            const answers = [];
+            
+            personsData.forEach(person => {
+                const personAnswers = {
+                    number: person.number,
+                    data: []
+                };
+                
+                person.questions.forEach(q => {
+                    const value = document.getElementById(q.id).value.trim().toUpperCase() || '___________';
+                    personAnswers.data.push({ label: q.label, value: value });
+                });
+                
+                answers.push(personAnswers);
+            });
+
+            displayAnswerSheet(answers);
+        });
+
+        // Display answer sheet
+        function displayAnswerSheet(answers) {
+            answerContent.innerHTML = '';
+            answerSheetTitle.textContent = `📋 ${studentName}`;
+            
+            answers.forEach(person => {
+                const personDiv = document.createElement('div');
+                personDiv.className = 'answer-person';
+                
+                let linesHTML = `<div class="answer-person-number">Person ${person.number}</div>`;
+                person.data.forEach(item => {
+                    linesHTML += `<div class="answer-line"><strong>${item.label}:</strong> ${item.value}</div>`;
+                });
+                
+                personDiv.innerHTML = linesHTML;
+                answerContent.appendChild(personDiv);
+            });
+
+            answerSheet.classList.add('visible');
+            answerSheet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Copy answers to clipboard
+        copyBtn.addEventListener('click', () => {
+            let answersText = `${studentName}\n\n`;
+            
+            personsData.forEach(person => {
+                answersText += `Person ${person.number}\n`;
+                person.questions.forEach(q => {
+                    const value = document.getElementById(q.id).value.trim().toUpperCase() || '___________';
+                    answersText += `${q.label}: ${value}\n`;
+                });
+                answersText += '\n';
+            });
+
+            // Try modern clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(answersText).then(() => {
+                    showCopySuccess();
+                }).catch(err => {
+                    fallbackCopy(answersText);
+                });
+            } else {
+                fallbackCopy(answersText);
+            }
+        });
+
+        // Fallback copy method for mobile devices
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.top = '0';
+            textArea.style.left = '0';
+            textArea.style.width = '2em';
+            textArea.style.height = '2em';
+            textArea.style.padding = '0';
+            textArea.style.border = 'none';
+            textArea.style.outline = 'none';
+            textArea.style.boxShadow = 'none';
+            textArea.style.background = 'transparent';
+            textArea.style.opacity = '0';
+            document.body.appendChild(textArea);
+            
+            textArea.focus();
+            textArea.select();
+            textArea.setSelectionRange(0, 99999);
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopySuccess();
+                } else {
+                    alert('Failed to copy. Please try again.');
+                }
+            } catch (err) {
+                alert('Failed to copy. Please try again.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Show copy success message
+        function showCopySuccess() {
+            copyMessage.style.display = 'block';
+            setTimeout(() => {
+                copyMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        // Allow Enter key to submit on welcome screen
+        studentNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !startBtn.disabled) {
+                startBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
